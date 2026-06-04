@@ -1,0 +1,33 @@
+name: Java Matrix Testing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Java ${{ matrix.java-version }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [11, 17, 21]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+          cache: maven
+
+      - name: Verify Java Version
+        run: java -version
+
+      - name: Build and Test
+        run: mvn clean test
